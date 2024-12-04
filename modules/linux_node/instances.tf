@@ -5,7 +5,7 @@ resource "aws_instance" "my_vm" {
   vpc_security_group_ids = var.vpc_security_group_ids
   instance_type          = var.instance
   tags = {
-    Name = "var.tags"
+    Name = var.tags
   }
 }
 
