@@ -10,4 +10,7 @@ variable "ami" {
  default = "ami-053b12d3152c0cc71" 
 }
 
+variable "profile" {
+ default = "student.1"
+}
 
