@@ -10,6 +10,7 @@ data "terraform_remote_state" "network_details" {
 module "webserver" {
   source = "./modules/linux_node"
   ami    = "ami-053b12d3152c0cc71"
+  instance_count = "1"
   instance = "t3.micro"
   key_name = data.terraform_remote_state.network_details.outputs.key_name
   subnet_id = data.terraform_remote_state.network_details.outputs.my_subnet
