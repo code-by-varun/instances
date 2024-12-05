@@ -13,7 +13,7 @@ resource "aws_instance" "my_vm" {
       host        = self.public_ip
       type        = "ssh"   
       user        = "ubuntu"
- #     agent       = false
+      agent       = false
       private_key = file("/home/varun/terrafrom_base/keys/student.1-vm.key")
     }
     inline = [
