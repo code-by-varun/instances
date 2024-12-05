@@ -21,3 +21,32 @@ resource "aws_instance" "my_vm" {
     ]
   }
 }
+
+resource "local_file" "tf_ansible_inventory" {
+  count    = length(aws_instance.my_vm) > 0 ? 1 : 0
+  content  = <<-EOT
+[${var.install_package}]
+%{ for vm in aws_instance.my_vm.* ~}
+${vm.private_dns} ansible_host=${vm.public_ip} ansible_ssh_user=ubuntu
+%{ endfor ~}
+EOT
+  filename = "./tf_ansible_${var.install_package}_inventory.ini"
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on    = [aws_instance.my_vm]
+  count         = length(aws_instance.my_vm) > 0 ? 1 : 0
+  create_duration = "30s"
+}
+
+resource "null_resource" "install_package" {
+  count    = length(aws_instance.my_vm) > 0 ? 1 : 0
+  depends_on = [time_sleep.wait_30_seconds]
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i ./tf_ansible_${var.install_package}_inventory.ini ../ansible-playbooks/${var.playbook_name} --private-key /home/varun/terrafrom_base/keys/student.1-vm.key"
+  }
+}
+
+
+
