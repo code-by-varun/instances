@@ -1,5 +1,5 @@
 variable "instance" {
- default = "t3.micro"
+ default = "t2.micro"
 }
 
 variable "region" {
